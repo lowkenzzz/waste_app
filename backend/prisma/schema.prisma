@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  name      String
+  createdAt DateTime @default(now())
+  reports   Report[]
+  tasks     Task[]
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+  CLEANER
+}
+
+model Report {
+  id              String       @id @default(uuid())
+  studentId       String
+  student         User         @relation(fields: [studentId], references: [id])
+  imageUrl        String
+  proofImageUrl   String?
+  gpsLat          Float
+  gpsLng          Float
+  confidenceScore Float?
+  status          ReportStatus @default(PENDING)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  task            Task?
+}
+
+enum ReportStatus {
+  PENDING
+  NEEDS_REVIEW
+  ASSIGNED
+  RESOLVED
+  DISCARDED
+}
+
+model Task {
+  id         String   @id @default(uuid())
+  reportId   String   @unique
+  report     Report   @relation(fields: [reportId], references: [id])
+  cleanerId  String
+  cleaner    User     @relation(fields: [cleanerId], references: [id])
+  assignedAt DateTime @default(now())
+  resolvedAt DateTime?
+}
