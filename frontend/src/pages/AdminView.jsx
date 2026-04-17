@@ -56,7 +56,7 @@ function AdminView() {
         <div className="list">
           {queue.map((report) => (
             <div key={report.id} className="panel">
-              <ReportCard report={report} />
+              <ReportCard report={report} showConfidence />
               <div className="row">
                 <button className="btn" onClick={() => approve(report.id)}>
                   Approve
@@ -80,7 +80,7 @@ function AdminView() {
           </select>
           <div className="list">
             {reports.map((report) => (
-              <ReportCard key={report.id} report={report} />
+              <ReportCard key={report.id} report={report} showConfidence />
             ))}
           </div>
         </div>

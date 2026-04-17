@@ -1,6 +1,6 @@
 import StatusBadge from "./StatusBadge";
 
-function ReportCard({ report }) {
+function ReportCard({ report, showConfidence = false }) {
   return (
     <div className="card">
       <img src={report.imageUrl} alt="Waste report" className="thumb" />
@@ -11,7 +11,7 @@ function ReportCard({ report }) {
         <p>
           <strong>GPS:</strong> {report.gpsLat}, {report.gpsLng}
         </p>
-        {report.confidenceScore !== null && report.confidenceScore !== undefined ? (
+        {showConfidence && report.confidenceScore !== null && report.confidenceScore !== undefined ? (
           <p>
             <strong>Confidence:</strong> {report.confidenceScore}%
           </p>

@@ -40,12 +40,19 @@ function reportRoutes(prisma) {
         res.status(201).json(report);
 
         analyzeImage(req.file.path)
-          .then(async (confidenceScore) => {
+          .then(async ({ confidenceScore }) => {
+            let nextStatus = "NEEDS_REVIEW";
+            if (confidenceScore < 40) {
+              nextStatus = "DISCARDED";
+            } else if (confidenceScore >= 70) {
+              nextStatus = "ASSIGNED";
+            }
+
             const updated = await prisma.report.update({
               where: { id: report.id },
               data: {
                 confidenceScore,
-                status: confidenceScore >= 70 ? "ASSIGNED" : "NEEDS_REVIEW",
+                status: nextStatus,
               },
             });
 
